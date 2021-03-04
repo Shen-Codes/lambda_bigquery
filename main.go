@@ -14,12 +14,11 @@ import (
 	"google.golang.org/api/option"
 )
 
-//Dataset copied from dataset struct
-
-// var bigClient *bigquery.Client
+//client initialized globally to be accessed by other functions
 var client *bigquery.Client
 var ctx context.Context
 
+//Lambda accepts init functions and runs them like a regular Go program
 func init() {
 	svc := s3.New(session.New())
 	input := &s3.GetObjectInput{
@@ -44,6 +43,7 @@ func main() {
 	lambda.Start(handler)
 }
 
+//Lambda functions must have a handler that is called in the main function. See docs for details https://docs.aws.amazon.com/lambda/latest/dg/lambda-golang.html
 func handler() ([]string, error) {
 	it, err := datasets(ctx, client)
 	if err != nil {
@@ -53,7 +53,7 @@ func handler() ([]string, error) {
 	return datasets, nil
 }
 
-//get dataset interator from BigQuery
+//get dataset interator from BigQuery https://pkg.go.dev/cloud.google.com/go/bigquery#Client.Datasets
 func datasets(ctx context.Context, client *bigquery.Client) (*bigquery.DatasetIterator, error) {
 	it := client.Datasets(ctx)
 	return it, nil
