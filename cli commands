@@ -1,0 +1,3 @@
+GOARCH=amd64 GOOS=linux go build main.go
+build-lambda-zip.exe -output main.zip main
+aws lambda update-function-code --function-name gotest --zip-file fileb://main.zip
